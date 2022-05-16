@@ -15,6 +15,10 @@ const typeDefs = gql`
     books: [Book]!
   }
 
+  type Query {
+    getAuthors: [Author]!
+  }
+
   type Book {
     id: String!
 
@@ -24,11 +28,11 @@ const typeDefs = gql`
 
     year: String!
 
-    author: Author
+    author: Author!
   }
 
   type Query {
-    getAuthors: [Author]
+    getBooks: [Book]!
   }
 `;
 
@@ -47,6 +51,23 @@ const resolvers = {
                 ...author,
 
                 books: books.filter((book) => book.authorId === author.id),
+              }))
+            )
+        ),
+
+    getBooks: () =>
+      flows.api.graphql.books
+        .doGetAll()
+
+        .then((books) =>
+          flows.api.graphql.authors
+            .doGetAll()
+
+            .then((authors) =>
+              books.map((book) => ({
+                ...book,
+
+                author: authors.find((author) => author.id === book.authorId),
               }))
             )
         ),

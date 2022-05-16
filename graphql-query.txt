@@ -1,0 +1,18 @@
+{
+  getAuthors {
+    id
+    name
+    books {
+      id
+      name
+    }
+  }
+  getBooks {
+    id
+    name
+    author {
+      id
+      name
+    }
+  }
+}
